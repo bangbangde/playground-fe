@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <h3>动态加载 script</h3>
+  <ol>
+    <li>
+      <p>观察执行顺序</p>
+    </li>
+  </ol>
+  <p>
+    起因：神策动态加载js后直接使用sdk接口让我对script加载执行逻辑产生了怀疑。
+    实际情况是我没注意到同步调用的接口在加载js前偷偷在本地声明了。
+  </p>
+  <script>
+    console.log("I'm script in head")
+  </script>
+</head>
+<body>
+  <script>
+    const se = document.createElement('script');
+    const fse = document.getElementsByTagName('script')[0];
+    se.async = 1;
+    se.src = "./d-script.js";
+    fse.parentNode.insertBefore(se, fse);
+    se.onerror = function() {
+      console.log('script 加载失败')
+    }
+    console.log('动态加载脚本同步代码执行完毕');
+  </script>
+</body>
+</html>
